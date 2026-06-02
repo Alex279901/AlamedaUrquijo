@@ -267,7 +267,7 @@ const els = {
 
 function boot() {
   state.user = users[0];
-  if (els.welcomeMessage) els.welcomeMessage.textContent = `Bienvenido ${users[0].name}`;
+  if (els.welcomeMessage) els.welcomeMessage.textContent = "Bienvenido Inversionista";
   renderAll();
   loadSheetData();
 }
