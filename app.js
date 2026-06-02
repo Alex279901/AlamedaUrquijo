@@ -236,10 +236,7 @@ const exactFormatter = new Intl.NumberFormat("es-ES", { style: "currency", curre
 const numberFormatter = new Intl.NumberFormat("es-ES");
 
 const els = {
-  loginScreen: document.querySelector("#loginScreen"),
   appShell: document.querySelector("#appShell"),
-  userSelect: document.querySelector("#userSelect"),
-  loginForm: document.querySelector("#loginForm"),
   welcomeMessage: document.querySelector("#welcomeMessage"),
   printTitle: document.querySelector("#printTitle"),
   printSubtitle: document.querySelector("#printSubtitle"),
@@ -269,8 +266,8 @@ const els = {
 };
 
 function boot() {
-  els.userSelect.innerHTML = users.map((user, index) => `<option value="${index}">${user.name} · ${user.area}</option>`).join("");
-  startCarousel();
+  state.user = users[0];
+  if (els.welcomeMessage) els.welcomeMessage.textContent = `Bienvenido ${users[0].name}`;
   renderAll();
   loadSheetData();
 }
@@ -899,7 +896,6 @@ function productKpis() {
   const previous = productTotals(true);
   const hasProductRows = current.quantity > 0;
   return [
-    kpi("Venta producto", exactFormatter.format(current.sales), "Venta neta de producto", previous.sales, current.sales, "product-sales", current.sales / Math.max(previous.sales, 1)),
     kpi("Cantidad", numberFormatter.format(current.quantity), "Unidades vendidas", previous.quantity, current.quantity, "product-units", current.quantity / Math.max(previous.quantity, 1), true, numberFormatter),
     { label: "Top producto", value: compactName(current.top.name), meta: `${numberFormatter.format(current.top.total)} unidades`, previous: compactName(productTotals(true).top.name), delta: hasProductRows ? "Producto lider" : "Sin datos", up: hasProductRows, progress: current.top.total / 1300, key: "top-product" },
     { label: "Categoria lider", value: `${current.leadingCategory.value.toFixed(1)}%`, meta: current.leadingCategory.name, previous: `${(previous.leadingCategory.value || 0).toFixed(1)}%`, delta: hasProductRows ? "Alta concentracion" : "Sin datos", up: hasProductRows, progress: current.leadingCategory.value / 40, key: "category-mix" }
@@ -1059,21 +1055,12 @@ function renderSalesContent() {
         </div>
         <div id="waterfallChart" class="chart cumulative-chart"></div>
       </article>
-      <article class="panel score-panel"><div class="panel-heading"><div><p class="eyebrow">Diagnostico</p><h2>Semaforo por sucursal</h2></div></div><div id="branchScorecards" class="score-list"></div></article>
-      <article class="panel risk-panel"><div class="panel-heading"><div><p class="eyebrow">Riesgo</p><h2>Riesgo operativo</h2><p class="chart-note">Linea horizontal en $0</p></div></div><div id="deficitChart" class="chart risk-chart"></div></article>
       <article class="panel full"><div class="panel-heading"><div><p class="eyebrow">Mapa de calor</p><h2>Documentos por dia y sucursal</h2></div></div><div id="heatmap" class="heatmap"></div></article>
-    </section>
-    <section class="table-section">
-      <div class="table-toolbar"><div><p class="eyebrow">Detalle accionable</p><h2>Ventas netas vs meta</h2></div><input id="tableSearch" type="search" placeholder="Buscar sucursal, estado o alerta"></div>
-      <div class="table-wrap"><table><thead><tr><th>Sucursal</th><th>Venta neta</th><th>Periodo anterior</th><th>Meta 100%</th><th>Cumplimiento</th><th>GAP</th><th>Estado</th></tr></thead><tbody id="detailRows"></tbody></table></div>
     </section>`;
   bindSegmented();
   renderTrendChart();
   renderWaterfall();
-  renderScorecards();
   renderHeatmap();
-  renderDeficit();
-  renderSalesTable();
 }
 
 function renderProductContent() {
@@ -1689,10 +1676,6 @@ function showToast(message) {
   window.setTimeout(() => els.toast.classList.remove("show"), 1800);
 }
 
-els.loginForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  login(users[Number(els.userSelect.value)]);
-});
 
 document.querySelectorAll(".module-card").forEach((button) => {
   button.addEventListener("click", () => {
@@ -1729,10 +1712,6 @@ els.dateEnd.addEventListener("change", (event) => {
 document.querySelector("#closeInspector").addEventListener("click", () => els.inspector.classList.remove("open"));
 document.querySelector("#refreshButton").addEventListener("click", () => loadSheetData(true));
 document.querySelector("#exportButton").addEventListener("click", exportCurrentView);
-document.querySelector("#logoutButton").addEventListener("click", () => {
-  els.appShell.classList.add("locked");
-  els.loginScreen.style.display = "grid";
-});
 
 async function exportCurrentView() {
   const meta = moduleMeta[state.activeModule];

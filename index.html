@@ -7,30 +7,7 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <section class="login-screen" id="loginScreen" aria-label="Inicio de sesion">
-      <div class="login-carousel" aria-hidden="true">
-        <img class="login-slide active" src="assets/cover-sgesp.png" alt="">
-      </div>
-      <div class="login-panel">
-        <img class="login-logo" src="assets/logo-blanco.png" alt="INDEF">
-        <p class="eyebrow">Finance Command</p>
-        <h1>Acceso ejecutivo</h1>
-        <p class="subtitle">Selecciona tu usuario para entrar al demo del panel.</p>
-        <form id="loginForm" class="login-form">
-          <label>
-            Usuario
-            <select id="userSelect"></select>
-          </label>
-          <label>
-            Acceso demo
-            <input id="passwordInput" type="password" value="indef-demo" aria-label="Password demo">
-          </label>
-          <button class="primary-button" type="submit">Iniciar sesion</button>
-        </form>
-      </div>
-    </section>
-
-    <div class="app-shell locked" id="appShell">
+    <div class="app-shell" id="appShell">
       <aside class="brand-rail" aria-label="Identidad y marcas">
         <div class="logo-lockup">
           <img class="indef-logo" src="assets/logo-blanco.png" alt="INDEF">
@@ -72,7 +49,6 @@
           </div>
           <div class="top-actions">
             <button class="ghost-button" type="button" id="refreshButton">Actualizar</button>
-            <button class="ghost-button" type="button" id="logoutButton">Salir</button>
             <button class="primary-button" type="button" id="exportButton">Descargar PDF</button>
           </div>
         </header>
